@@ -1,22 +1,25 @@
 import { takeLatest, put } from "redux-saga/effects";
 import {
-  SIGN_UP,
-  LOGIN,
+  SIGN_UP_REQUEST,
+  LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
-  LOGOUT,
+  LOGOUT_REQUEST,
   LOGOUT_SUCCESS,
   SIGNUP_SUCCESS,
   SIGNUP_FAILURE,
-  GET_ME,
+  GET_ME_REQUEST,
   GET_ME_SUCCESS,
+  GET_ME_FAILURE,
 } from "../actions/types";
+
+const url = "https://bookmarks-app-server.herokuapp.com/";
 
 function* register(action) {
   let { name, email, password } = action.payload;
   let item = { name, email, password };
   if (email !== "" && password !== "" && name !== "") {
-    let result = yield fetch(action.payload.url.concat("register"), {
+    let result = yield fetch(url.concat("register"), {
       method: "post",
       headers: {
         Accept: "application/json",
@@ -40,7 +43,7 @@ function* login(action) {
   let { email, password } = action.payload;
   let item = { email, password };
   if (email !== "" && password !== "") {
-    let result = yield fetch(action.payload.url.concat("login"), {
+    let result = yield fetch(url.concat("login"), {
       method: "post",
       headers: {
         Accept: "application/json",
@@ -60,16 +63,20 @@ function* login(action) {
   }
 }
 
-function* user(action) {
+function* user() {
   if (localStorage.getItem("auth")) {
     var auth = JSON.parse(localStorage.getItem("auth"));
-    let result = yield fetch(action.payload.url.concat("me"), {
-      method: "get",
-      headers: { Authorization: `Bearer ${auth}` },
-    });
-    result = yield result.json();
-    console.log(result);
-    yield put({ type: GET_ME_SUCCESS, result });
+    try {
+      let result = yield fetch(url.concat("me"), {
+        method: "get",
+        headers: { Authorization: `Bearer ${auth}` },
+      });
+      result = yield result.json();
+      console.log(result);
+      yield put({ type: GET_ME_SUCCESS, result });
+    } catch (error) {
+      yield put({ type: GET_ME_FAILURE }, error);
+    }
   }
 }
 
@@ -79,10 +86,10 @@ function* logout() {
 }
 
 function* authSaga() {
-  yield takeLatest(SIGN_UP, register);
-  yield takeLatest(LOGIN, login);
-  yield takeLatest(LOGOUT, logout);
-  yield takeLatest(GET_ME, user);
+  yield takeLatest(SIGN_UP_REQUEST, register);
+  yield takeLatest(LOGIN_REQUEST, login);
+  yield takeLatest(LOGOUT_REQUEST, logout);
+  yield takeLatest(GET_ME_REQUEST, user);
 }
 
 export default authSaga;

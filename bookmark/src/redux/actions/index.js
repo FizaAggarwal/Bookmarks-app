@@ -2,14 +2,15 @@ import {
   SET_NAME,
   SET_EMAIL,
   SET_PASSWORD,
-  SIGN_UP,
-  LOGIN,
-  GET_FOLDERS,
-  LOGOUT,
-  SET_SPINNER,
-  GET_CHILDREN,
-  GET_ME,
+  SIGN_UP_REQUEST,
+  LOGIN_REQUEST,
+  GET_FOLDERS_REQUEST,
+  LOGOUT_REQUEST,
+  GET_CHILDREN_REQUEST,
+  GET_ME_REQUEST,
+  GET_BOOKAMRKS_REQUEST,
 } from "./types";
+
 export const setName = (name) => {
   return {
     type: SET_NAME,
@@ -37,62 +38,54 @@ export const setPassword = (password) => {
   };
 };
 
-export const signUp = (name, email, password, url) => {
+export const signUp = (name, email, password) => {
   return {
-    type: SIGN_UP,
+    type: SIGN_UP_REQUEST,
     payload: {
       name: name,
       email: email,
       password: password,
-      url: url,
     },
   };
 };
 
-export const login = (email, password, url) => {
+export const login = (email, password) => {
   return {
-    type: LOGIN,
+    type: LOGIN_REQUEST,
     payload: {
       email: email,
       password: password,
-      url: url,
     },
   };
 };
 
 export const logout = () => {
   return {
-    type: LOGOUT,
+    type: LOGOUT_REQUEST,
   };
 };
 
-export const getFolders = (url) => {
+export const getFolders = () => {
   return {
-    type: GET_FOLDERS,
-    payload: {
-      url: url,
-    },
+    type: GET_FOLDERS_REQUEST,
   };
 };
 
-export const getMe = (url) => {
+export const getMe = () => {
   return {
-    type: GET_ME,
-    payload: {
-      url: url,
-    },
+    type: GET_ME_REQUEST,
   };
 };
 
-export const setSpinner = () => {
+export const getBookmarks = () => {
   return {
-    type: SET_SPINNER,
+    type: GET_BOOKAMRKS_REQUEST,
   };
 };
 
 export const getChildren = (id) => {
   return {
-    type: GET_CHILDREN,
+    type: GET_CHILDREN_REQUEST,
     payload: {
       id: id,
     },

@@ -3,17 +3,14 @@ import {
   SET_EMAIL,
   SET_PASSWORD,
   LOGIN_SUCCESS,
-  GET_FOLDERS_SUCCESS,
   LOGIN_FAILURE,
   LOGOUT_SUCCESS,
-  SET_SPINNER,
-  LOGIN,
-  SIGN_UP,
+  LOGIN_REQUEST,
+  SIGN_UP_REQUEST,
   SIGNUP_SUCCESS,
   SIGNUP_FAILURE,
-  GET_CHILDREN_SUCCESS,
   GET_ME_SUCCESS,
-  GET_CHILDREN,
+  GET_ME_REQUEST,
 } from "../actions/types";
 
 const initialState = {
@@ -21,14 +18,12 @@ const initialState = {
   email: "",
   password: "",
   isRegister: "",
-  folders: [],
   errorE: false,
   errorP: false,
   errorN: false,
-  isLogin: false,
   disabled: false,
   user: {},
-  parentId: "",
+  userLoading: false,
 };
 
 const authReducers = (state = initialState, action) => {
@@ -42,7 +37,7 @@ const authReducers = (state = initialState, action) => {
     case SET_PASSWORD:
       return { ...state, password: action.payload.password };
 
-    case LOGIN:
+    case LOGIN_REQUEST:
       if (state.email === "") {
         state.errorE = true;
       }
@@ -54,12 +49,12 @@ const authReducers = (state = initialState, action) => {
       return { ...state };
 
     case LOGIN_SUCCESS:
-      return { ...state, isLogin: true, disabled: true };
+      return { ...state, disabled: true };
 
     case LOGIN_FAILURE:
       return { ...state };
 
-    case SIGN_UP:
+    case SIGN_UP_REQUEST:
       if (state.email === "") {
         state.errorE = true;
       }
@@ -81,23 +76,12 @@ const authReducers = (state = initialState, action) => {
     case SIGNUP_FAILURE:
       return { ...state };
 
-    case GET_FOLDERS_SUCCESS:
-      return { ...state, folders: action.result, spinner: false };
+    case GET_ME_REQUEST: {
+      return { ...state, userLoading: true };
+    }
 
     case GET_ME_SUCCESS:
-      return { ...state, user: action.result };
-
-    case GET_CHILDREN:
-      return { ...state, parentId: action.payload.id };
-
-    case GET_CHILDREN_SUCCESS:
-      const newArray = state.folders.map((item) =>
-        item.id === state.parentId ? { ...item, children: action.result } : item
-      );
-      return { ...state, folders: newArray };
-
-    case SET_SPINNER:
-      return { ...state, spinner: true };
+      return { ...state, user: action.result, userLoading: false };
 
     case LOGOUT_SUCCESS:
       return {

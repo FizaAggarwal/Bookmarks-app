@@ -4,7 +4,8 @@ import styled from "@emotion/styled";
 import image from "../assets/login.png";
 import { Input } from "@mui/material";
 import { Button } from "@mui/material";
-// import Checkbox from "@mui/material/Checkbox";
+import { useSelector, useDispatch } from "react-redux";
+import { setName, setEmail, setPassword, signUp } from "../redux/actions";
 
 const Main = styled(Box)`
   display: grid;
@@ -40,7 +41,9 @@ const CustomInput = styled(Input)`
   border: 1px solid #f1f1fa;
   border-radius: 12px;
   padding-left: 20px;
-  color:"#91919F;
+  color: #91919f;
+  margin-top: 40px;
+  margin-left: 200px;
 `;
 
 const CustomButton = styled(Button)`
@@ -51,10 +54,15 @@ const CustomButton = styled(Button)`
   color: #ffffff;
   margin-top: 40px;
   margin-left: 200px;
+  :hover {
+    color: black;
+    background-color: grey;
+  }
 `;
 const CustomBox = styled(Box)`
   margin-top: 40px;
   margin-left: 200px;
+  display: flex;
 `;
 
 const ErrorBox = styled(Box)`
@@ -63,7 +71,34 @@ const ErrorBox = styled(Box)`
   font-size: 13px;
 `;
 
-function SignUp(props) {
+const imgStyle = {
+  width: "600px",
+  height: "600px",
+  marginLeft: "50px",
+  position: "absolute",
+  top: "70px",
+};
+
+const Name = styled(Input)`
+  width: 350px;
+  height: 50px;
+  border: 1px solid #f1f1fa;
+  border-radius: 12px;
+  padding-left: 20px;
+  color: #91919f;
+  margin-top: 150px;
+  margin-left: 200px;
+`;
+
+const Account = styled(Box)`
+  color: #91919f;
+`;
+
+function SignUp() {
+  const dispatch = useDispatch();
+  const initial = useSelector((state) => state.authReducers);
+  const { errorN, errorE, errorP, name, email, password, disabled } = initial;
+
   return (
     <>
       {localStorage.getItem("auth") ? (
@@ -73,65 +108,38 @@ function SignUp(props) {
           <LeftBox>
             <Heading1>Welcome,</Heading1>
             <Heading2>Get Started</Heading2>
-            <img
-              src={image}
-              alt="description"
-              style={{
-                width: "600px",
-                height: "600px",
-                marginLeft: "50px",
-                position: "absolute",
-                top: "70px",
-              }}
-            />
+            <img src={image} alt="description" style={imgStyle} />
           </LeftBox>
           <RightBox>
-            <CustomInput
-              sx={{ mt: "150px", ml: "200px" }}
+            <Name
               placeholder="Name"
-              onChange={props.name}
-              disableUnderline={true}
+              onChange={(e) => dispatch(setName(e.target.value))}
+              disableUnderline
               required
             />
-            {props.state.errorN === true && (
-              <ErrorBox>Name is required</ErrorBox>
-            )}
+            {errorN && <ErrorBox>Name is required</ErrorBox>}
             <CustomInput
-              sx={{ mt: "40px", ml: "200px" }}
               placeholder="Email"
-              onChange={props.email}
-              disableUnderline={true}
-              required={true}
+              onChange={(e) => dispatch(setEmail(e.target.value))}
+              disableUnderline
+              required
             />
-            {props.state.errorE === true && (
-              <ErrorBox>Email is required</ErrorBox>
-            )}
+            {errorE && <ErrorBox>Email is required</ErrorBox>}
             <CustomInput
-              sx={{ mt: "40px", ml: "200px" }}
               placeholder="Password"
-              onChange={props.password}
-              disableUnderline={true}
-              required={true}
+              onChange={(e) => dispatch(setPassword(e.target.value))}
+              disableUnderline
+              required
             />
-            {props.state.errorP === true && (
-              <ErrorBox>Password is required</ErrorBox>
-            )}
+            {errorP && <ErrorBox>Password is required</ErrorBox>}
             <CustomButton
-              onClick={props.button}
-              sx={{
-                "&:hover": {
-                  color: "black",
-                  backgroundColor: "gray",
-                },
-              }}
-              disabled={props.state.disabled}
+              onClick={() => dispatch(signUp(name, email, password))}
+              disabled={disabled}
             >
-              {props.state.disabled ? "Loading..." : "SignUp"}
+              {disabled ? "Loading..." : "SignUp"}
             </CustomButton>
             <CustomBox>
-              <span style={{ color: "#91919F" }}>
-                Already have an account?{" "}
-              </span>
+              <Account>Already have an account? </Account>
               <Link to="/login" style={{ color: "#5352ed" }}>
                 Login
               </Link>
@@ -140,23 +148,6 @@ function SignUp(props) {
         </Main>
       )}
     </>
-    // <>
-    //   <h1>Sign Up</h1>
-    //   <input placeholder="name" onChange={props.name} />
-    //   <br />
-    //   <br />
-    //   <input placeholder="email" onChange={props.email} />
-    //   <br />
-    //   <br />
-    //   <input placeholder="password" onChange={props.password} />
-    //   <br />
-    //   <br />
-    //   <button onClick={props.button}>Sign up</button>
-    //   <br />
-    //   <br />
-    //   Already Have an Account? <Link to="/login">Login</Link>
-    //   {props.login && <Navigate replace to="/dashboard" />}
-    // </>
   );
 }
 

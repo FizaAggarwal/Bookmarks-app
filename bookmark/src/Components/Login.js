@@ -4,6 +4,8 @@ import styled from "@emotion/styled";
 import image from "../assets/login.png";
 import { Input } from "@mui/material";
 import { Button } from "@mui/material";
+import { useSelector, useDispatch } from "react-redux";
+import { setEmail, setPassword, login } from "../redux/actions";
 
 const Main = styled(Box)`
   display: grid;
@@ -39,7 +41,9 @@ const CustomInput = styled(Input)`
   border: 1px solid #f1f1fa;
   border-radius: 12px;
   padding-left: 20px;
-  color:"#91919F;
+  color: #91919f;
+  margin-top: 40px;
+  margin-left: 200px;
 `;
 
 const CustomButton = styled(Button)`
@@ -50,19 +54,59 @@ const CustomButton = styled(Button)`
   color: #ffffff;
   margin-top: 40px;
   margin-left: 200px;
+  :hover {
+    color: black;
+    background-color: grey;
+  }
 `;
 const CustomBox = styled(Box)`
   margin-top: 40px;
   margin-left: 200px;
+  display: flex;
 `;
 
 const ErrorBox = styled(Box)`
   margin-top: 5px;
+  margin-bottom: 15px;
   color: red;
   font-size: 13px;
 `;
 
-function Login(props) {
+const imgStyle = {
+  width: "600px",
+  height: "600px",
+  marginLeft: "50px",
+  position: "absolute",
+  top: "70px",
+};
+
+const Email = styled(Input)`
+  width: 350px;
+  height: 50px;
+  border: 1px solid #f1f1fa;
+  border-radius: 12px;
+  padding-left: 20px;
+  color: #91919f;
+  margin-top: 200px;
+  margin-left: 200px;
+`;
+
+const Forgot = styled(Box)`
+  margin-top: 40px;
+  margin-left: 200px;
+  color: #5352ed;
+  font-weight: bold;
+`;
+
+const Account = styled(Box)`
+  color: #91919f;
+`;
+
+function Login() {
+  const dispatch = useDispatch();
+  const initial = useSelector((state) => state.authReducers);
+  const { errorE, errorP, email, password, disabled } = initial;
+
   return (
     <>
       {localStorage.getItem("auth") ? (
@@ -72,58 +116,32 @@ function Login(props) {
           <LeftBox>
             <Heading1>Welcome,</Heading1>
             <Heading2>Get Started</Heading2>
-            <img
-              src={image}
-              alt="description"
-              style={{
-                width: "600px",
-                height: "600px",
-                marginLeft: "50px",
-                position: "absolute",
-                top: "70px",
-              }}
-            />
+            <img src={image} alt="description" style={imgStyle} />
           </LeftBox>
           <RightBox>
-            <CustomInput
-              sx={{ mt: "200px", ml: "200px" }}
+            <Email
               placeholder="Email"
-              onChange={props.email}
-              disableUnderline={true}
-              required={true}
+              onChange={(e) => dispatch(setEmail(e.target.value))}
+              disableUnderline
+              required
             />
-            {props.state.errorE === true && (
-              <ErrorBox>Email is required</ErrorBox>
-            )}
+            {errorE && <ErrorBox>Email is required</ErrorBox>}
             <CustomInput
-              sx={{ mt: "40px", ml: "200px" }}
               placeholder="Password"
-              onChange={props.password}
-              disableUnderline={true}
-              required={true}
+              onChange={(e) => dispatch(setPassword(e.target.value))}
+              disableUnderline
+              required
             />
-            {props.state.errorP === true && (
-              <ErrorBox>Password is required</ErrorBox>
-            )}
+            {errorP && <ErrorBox>Password is required</ErrorBox>}
             <CustomButton
-              onClick={props.button}
-              sx={{
-                "&:hover": {
-                  color: "black",
-                  backgroundColor: "gray",
-                },
-              }}
-              disabled={props.state.disabled}
+              onClick={() => dispatch(login(email, password))}
+              disabled={disabled}
             >
-              {props.state.disabled ? "Loading..." : "Login"}
+              {disabled ? "Loading..." : "Login"}
             </CustomButton>
-            <CustomBox sx={{ color: "#5352ed", fontWeight: "bold" }}>
-              Forgot Passoword?
-            </CustomBox>
+            <Forgot>Forgot Passoword?</Forgot>
             <CustomBox>
-              <span style={{ color: "#91919F" }}>
-                Don't have an account yet?{" "}
-              </span>
+              <Account>Don't have an account yet? </Account>
               <Link to="/signup" style={{ color: "#5352ed" }}>
                 Sign Up
               </Link>
