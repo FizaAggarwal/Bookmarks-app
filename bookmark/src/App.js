@@ -1,19 +1,16 @@
-import { useSelector } from "react-redux";
-import SignUp from "./Components/SignUp";
-import Login from "./Components/Login";
-import Dashboard from "./Components/Dashboard";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
 } from "react-router-dom";
+
+import SignUp from "./Components/SignUp";
+import Login from "./Components/Login";
+import Dashboard from "./Components/Dashboard";
 import "./App.css";
 
 function App() {
-  //eslint-disable-next-line
-  const initial = useSelector((state) => state.authReducers);
-
   return (
     <>
       <Router>

@@ -9,12 +9,12 @@ const CustomBox = styled(Box)`
   flex-direction: column;
 `;
 
-const imgStyle = {
-  width: "250px",
-  height: "200px",
-  borderRadius: "15px",
-  margin: "20px 20px 0px 20px",
-};
+const Img = styled.img`
+  width: 250px;
+  height: 200px;
+  border-radius: 15px;
+  margin: 20px 20px 0px 20px;
+`;
 
 const Name = styled(Box)`
   font-size: 20px;
@@ -32,7 +32,7 @@ function Bookmark(props) {
   const { item } = props;
   return (
     <CustomBox>
-      <img src={item.imageUrl} alt="title" style={imgStyle} />
+      <Img src={item.imageUrl} alt="title" />
       <Name>{item.name}</Name>
       <Description>
         {item.description !== ""

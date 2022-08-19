@@ -1,11 +1,13 @@
 import { Link, Navigate } from "react-router-dom";
 import { Box } from "@mui/system";
 import styled from "@emotion/styled";
-import image from "../assets/login.png";
 import { Input } from "@mui/material";
 import { Button } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
+
 import { setEmail, setPassword, login } from "../redux/actions";
+import image from "../assets/login.png";
+import { authSelector } from "../redux/selectors";
 
 const Main = styled(Box)`
   display: grid;
@@ -72,13 +74,13 @@ const ErrorBox = styled(Box)`
   font-size: 13px;
 `;
 
-const imgStyle = {
-  width: "600px",
-  height: "600px",
-  marginLeft: "50px",
-  position: "absolute",
-  top: "70px",
-};
+const Img = styled.img`
+  width: 600px;
+  height: 600px;
+  margin-left: 50px;
+  position: absolute;
+  top: 70px;
+`;
 
 const Email = styled(Input)`
   width: 350px;
@@ -102,10 +104,14 @@ const Account = styled(Box)`
   color: #91919f;
 `;
 
+const CustomLink = styled(Link)`
+  color: #5352ed;
+`;
+
 function Login() {
   const dispatch = useDispatch();
-  const initial = useSelector((state) => state.authReducers);
-  const { errorE, errorP, email, password, disabled } = initial;
+  const initial = useSelector(authSelector);
+  const { errorEmail, errorPassword, email, password, loginLoading } = initial;
 
   return (
     <>
@@ -116,7 +122,7 @@ function Login() {
           <LeftBox>
             <Heading1>Welcome,</Heading1>
             <Heading2>Get Started</Heading2>
-            <img src={image} alt="description" style={imgStyle} />
+            <Img src={image} alt="description" />
           </LeftBox>
           <RightBox>
             <Email
@@ -125,26 +131,25 @@ function Login() {
               disableUnderline
               required
             />
-            {errorE && <ErrorBox>Email is required</ErrorBox>}
+            {errorEmail && <ErrorBox>Email is required</ErrorBox>}
             <CustomInput
+              type="password"
               placeholder="Password"
               onChange={(e) => dispatch(setPassword(e.target.value))}
               disableUnderline
               required
             />
-            {errorP && <ErrorBox>Password is required</ErrorBox>}
+            {errorPassword && <ErrorBox>Password is required</ErrorBox>}
             <CustomButton
               onClick={() => dispatch(login(email, password))}
-              disabled={disabled}
+              disabled={loginLoading === "inProgress"}
             >
-              {disabled ? "Loading..." : "Login"}
+              {loginLoading === "inProgress" ? "Loading..." : "Login"}
             </CustomButton>
             <Forgot>Forgot Passoword?</Forgot>
             <CustomBox>
               <Account>Don't have an account yet? </Account>
-              <Link to="/signup" style={{ color: "#5352ed" }}>
-                Sign Up
-              </Link>
+              <CustomLink to="/signup">Sign Up</CustomLink>
             </CustomBox>
           </RightBox>
         </Main>

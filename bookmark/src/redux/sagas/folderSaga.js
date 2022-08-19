@@ -1,28 +1,19 @@
-import { takeLatest, put } from "redux-saga/effects";
+import { put } from "redux-saga/effects";
+
 import {
-  GET_FOLDERS_REQUEST,
   GET_FOLDERS_SUCCESS,
-  GET_CHILDREN_REQUEST,
   GET_CHILDREN_SUCCESS,
-  GET_BOOKAMRKS_REQUEST,
   GET_BOOKMARKS_SUCCESS,
   GET_FOLDERS_FAILURE,
   GET_CHILDREN_FAILURE,
-  GET_BOOKAMRKS_FAILURE,
-} from "../actions/types";
+  GET_BOOKMARKS_FAILURE,
+} from "../types/async_types";
+import request from "../requests";
 
-const url = "https://bookmarks-app-server.herokuapp.com/";
-
-function* folders() {
+export function* folders() {
   if (localStorage.getItem("auth")) {
-    var auth = JSON.parse(localStorage.getItem("auth"));
     try {
-      let result = yield fetch(url.concat("folders"), {
-        method: "get",
-        headers: { Authorization: `Bearer ${auth}` },
-      });
-      result = yield result.json();
-      console.log(result);
+      let result = yield request("folders", "get", {});
       yield put({ type: GET_FOLDERS_SUCCESS, result });
     } catch (error) {
       yield put({ type: GET_FOLDERS_FAILURE, error });
@@ -30,43 +21,24 @@ function* folders() {
   }
 }
 
-function* children(action) {
-  var auth = JSON.parse(localStorage.getItem("auth"));
+export function* children(action) {
   try {
-    let result = yield fetch(
-      url.concat("folders?folderId=").concat(action.payload.id),
-      {
-        method: "get",
-        headers: { Authorization: `Bearer ${auth}` },
-      }
+    let result = yield request(
+      `folders?folderId=${action.payload.id}`,
+      "get",
+      {}
     );
-    result = yield result.json();
-    console.log(result);
     yield put({ type: GET_CHILDREN_SUCCESS, result });
   } catch (error) {
     yield put({ type: GET_CHILDREN_FAILURE, error });
   }
 }
 
-function* bookmarks() {
-  var auth = JSON.parse(localStorage.getItem("auth"));
+export function* bookmarks() {
   try {
-    let result = yield fetch(url.concat("folder-bookmarks"), {
-      method: "get",
-      headers: { Authorization: `Bearer ${auth}` },
-    });
-    result = yield result.json();
-    console.log(result);
+    let result = yield request("folder-bookmarks", "get", {});
     yield put({ type: GET_BOOKMARKS_SUCCESS, result });
   } catch (error) {
-    yield put({ type: GET_BOOKAMRKS_FAILURE, error });
+    yield put({ type: GET_BOOKMARKS_FAILURE, error });
   }
 }
-
-function* folderSaga() {
-  yield takeLatest(GET_FOLDERS_REQUEST, folders);
-  yield takeLatest(GET_CHILDREN_REQUEST, children);
-  yield takeLatest(GET_BOOKAMRKS_REQUEST, bookmarks);
-}
-
-export default folderSaga;

@@ -1,17 +1,19 @@
 import { Box } from "@mui/system";
 import styled from "@emotion/styled";
-import profile from "../assets/profile.png";
 import { useSelector } from "react-redux";
+
+import profile from "../assets/profile.png";
+import { authSelector } from "../redux/selectors";
 
 const CustomBox = styled(Box)`
   display: flex;
 `;
 
-const imgStyle = {
-  width: "50px",
-  height: "50px",
-  margin: "10px 10px auto auto",
-};
+const Img = styled.img`
+  width: 50px;
+  height: 50px;
+  margin: 10px 10px auto auto;
+`;
 
 const CustommBox = styled(Box)`
   display: flex;
@@ -36,14 +38,14 @@ const Email = styled(Box)`
 `;
 
 function Profile() {
-  const initial = useSelector((state) => state.authReducers);
+  const initial = useSelector(authSelector);
   const { userLoading, user } = initial;
 
   return (
     <CustomBox>
-      <img src={profile} alt="profile" style={imgStyle} />
+      <Img src={profile} alt="profile" />
       <CustommBox>
-        {userLoading && <Loading>Loading...</Loading>}
+        {userLoading === "inProgress" && <Loading>Loading...</Loading>}
         <Name>{user.name}</Name>
         <Email>{user.email}</Email>
       </CustommBox>

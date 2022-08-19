@@ -2,15 +2,17 @@ import { Box } from "@mui/system";
 import styled from "@emotion/styled";
 import { Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getFolders, getMe, getBookmarks } from "../redux/actions";
 import { useEffect } from "react";
-import Bookmark from "./Bookmark";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import { Input } from "@mui/material";
+
 import LeftBar from "./LeftBar";
 import Profile from "./Profile";
 import AddLink from "./AddLink";
+import { getFolders, getMe, getBookmarks } from "../redux/actions";
+import Bookmark from "./Bookmark";
+import { folderSelector } from "../redux/selectors";
 
 const Main = styled(Box)`
   display: grid;
@@ -78,7 +80,7 @@ const Loading = styled(Box)`
 
 function Dashboard() {
   const dispatch = useDispatch();
-  const initial = useSelector((state) => state.folderReducers);
+  const initial = useSelector(folderSelector);
   const { bookmarkLoading, bookmarks } = initial;
 
   useEffect(() => {
@@ -107,7 +109,9 @@ function Dashboard() {
             </Middle>
 
             <Bottom>
-              {bookmarkLoading && <Loading>Loading...</Loading>}
+              {bookmarkLoading === "inProgress" && (
+                <Loading>Loading...</Loading>
+              )}
               {bookmarks.length !== 0 &&
                 bookmarks.map((item) => <Bookmark key={item.id} item={item} />)}
             </Bottom>

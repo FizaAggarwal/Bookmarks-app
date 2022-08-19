@@ -1,5 +1,6 @@
 import { Box } from "@mui/system";
 import styled from "@emotion/styled";
+
 import addlink from "../assets/addlink.png";
 
 const CustomBox = styled(Box)`
@@ -25,11 +26,11 @@ const Url = styled(Box)`
 `;
 
 const Link = styled(Box)`
-background-color: #6C6BF9,
-font-size:15px;
-padding: 15px;
-border-radius:15px;
-margin-top:5px;
+  background-color: #6c6bf9;
+  font-size: 15px;
+  padding: 15px;
+  border-radius: 15px;
+  margin-top: 5px;
 `;
 
 const Bottom = styled(Box)`
@@ -53,11 +54,11 @@ const Save = styled(Box)`
   margin-left: 70px;
 `;
 
-const imgStyle = {
-  height: "250px",
-  width: "250px",
-  margin: "10px 10px auto auto",
-};
+const Img = styled.img`
+  height: 250px;
+  width: 250px;
+  margin: 10px 10px auto auto;
+`;
 
 function AddLink() {
   return (
@@ -72,7 +73,7 @@ function AddLink() {
           <Save>Save</Save>
         </Bottom>
       </LeftBox>
-      <img src={addlink} alt="AddLink" style={imgStyle} />
+      <Img src={addlink} alt="AddLink" />
     </CustomBox>
   );
 }

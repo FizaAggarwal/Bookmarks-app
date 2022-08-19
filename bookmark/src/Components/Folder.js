@@ -3,9 +3,11 @@ import styled from "@emotion/styled";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import FolderIcon from "@mui/icons-material/Folder";
 import { useDispatch, useSelector } from "react-redux";
-import { getChildren } from "../redux/actions";
 import CloseIcon from "@mui/icons-material/Close";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
+
+import { getChildren } from "../redux/actions";
+import { folderSelector } from "../redux/selectors";
 
 const CustomButton = styled(Button)`
   width: 200px;
@@ -45,7 +47,7 @@ const Cross = styled(CloseIcon)`
 function Folder(props) {
   const dispatch = useDispatch();
   const { item } = props;
-  const initial = useSelector((state) => state.folderReducers);
+  const initial = useSelector(folderSelector);
   const { parentId, childLoading } = initial;
 
   return (
@@ -57,7 +59,7 @@ function Folder(props) {
           {item.name}
         </CustomButton>
       </Box>
-      {item.id === parentId && childLoading ? (
+      {item.id === parentId && childLoading === "inProgress" ? (
         <Loading>Loading...</Loading>
       ) : (
         item.hasOwnProperty("children") &&

@@ -1,15 +1,13 @@
 import {
-  SET_NAME,
-  SET_EMAIL,
-  SET_PASSWORD,
   SIGN_UP_REQUEST,
   LOGIN_REQUEST,
   GET_FOLDERS_REQUEST,
   LOGOUT_REQUEST,
   GET_CHILDREN_REQUEST,
   GET_ME_REQUEST,
-  GET_BOOKAMRKS_REQUEST,
-} from "./types";
+  GET_BOOKMARKS_REQUEST,
+} from "../types/async_types";
+import { SET_NAME, SET_EMAIL, SET_PASSWORD } from "../types/sync_types";
 
 export const setName = (name) => {
   return {
@@ -59,9 +57,10 @@ export const login = (email, password) => {
   };
 };
 
-export const logout = () => {
+export const logout = (navigate) => {
   return {
     type: LOGOUT_REQUEST,
+    navigate: navigate,
   };
 };
 
@@ -79,7 +78,7 @@ export const getMe = () => {
 
 export const getBookmarks = () => {
   return {
-    type: GET_BOOKAMRKS_REQUEST,
+    type: GET_BOOKMARKS_REQUEST,
   };
 };
 
