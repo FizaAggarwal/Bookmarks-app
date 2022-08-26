@@ -26,7 +26,9 @@ function App() {
               )
             }
           />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />}>
+            <Route path=":id" element={<Dashboard />} />
+          </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
         </Routes>

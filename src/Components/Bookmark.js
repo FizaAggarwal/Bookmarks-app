@@ -1,6 +1,8 @@
 import { Box } from "@mui/material";
 import styled from "@emotion/styled";
 
+import image from "../assets/default.jpg";
+
 const CustomBox = styled(Box)`
   margin: 30px 20px 0px 20px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
@@ -30,9 +32,10 @@ const Description = styled(Box)`
 
 function Bookmark(props) {
   const { item } = props;
+  const imgUrl = item.imageUrl ? item.imageUrl : image;
   return (
     <CustomBox>
-      <Img src={item.imageUrl} alt="title" />
+      <Img src={imgUrl} alt="title" />
       <Name>{item.name}</Name>
       <Description>
         {item.description !== ""

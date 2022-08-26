@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 import logo from "../assets/bookmarklogo.png";
 import Folder from "./Folder";
-import { logout } from "../redux/actions";
+import { logout, openModal } from "../redux/actions";
 import { folderSelector } from "../redux/selectors";
 
 const LeftBox = styled(Box)`
@@ -24,19 +24,16 @@ const Img = styled.img`
   width: 55px;
   height: 55px;
   margin: 20px;
-  position: absolute;
 `;
 const Heading = styled(Box)`
-  margin: 0px auto auto 20px;
+  margin: 0px auto 0px 20px;
   font-size: 22px;
   font-weight: bold;
-  position: relative;
-  top: 80px;
 `;
 const CustomInput = styled(Input)`
   width: 200px;
   height: 40px;
- margin: 120px auto auto 10px;
+  margin: 20px auto 0px 10px;
   border: 1px solid #DCDCDC;
   border-radius: 12px;
   padding-left: 10px;
@@ -46,9 +43,10 @@ const CustomInput = styled(Input)`
 const FolderBox = styled(Box)`
   display: flex;
   flex-direction: column;
-  margin-bottom: 150px;
   align-items: center;
-  height: 300px;
+  margin-top: 10px;
+  height: 450px;
+  overflow: auto;
 `;
 const FolderLoading = styled(HourglassTopIcon)`
   font-size: 70px;
@@ -74,7 +72,7 @@ const Logout = styled(Button)`
   width: 200px;
   height: 40px;
   border-radius: 12px;
-  margin: auto auto 20px 10px;
+  margin: auto auto 10px 10px;
   color: #88868f;
   align-items: center;
   padding-right: 60px;
@@ -84,11 +82,20 @@ const CustomLogout = styled(LogoutIcon)`
   padding: 10px;
 `;
 
+const Create = styled(Button)`
+  display: flex;
+  color: #88868f;
+  align-items: center;
+  width: 200px;
+  height: 40px;
+  border-radius: 12px;
+`;
+
 function LeftBar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const initial = useSelector(folderSelector);
-  const { folderLoading, folders } = initial;
+  const { folderLoading, folders, rootIds } = initial;
 
   return (
     <LeftBox>
@@ -98,10 +105,13 @@ function LeftBar() {
       </Box>
       <CustomInput placeholder="Search..." disableUnderline />
       <FolderBox>
-        {folderLoading === "inProgress" && <FolderLoading />}
-        {folders.length !== 0 &&
-          folders.map((item) => <Folder key={item.id} item={item} />)}
+        {folderLoading === "inProgress" ? (
+          <FolderLoading />
+        ) : (
+          rootIds.map((item) => <Folder item={folders[item]} key={item} />)
+        )}
       </FolderBox>
+      <Create onClick={() => dispatch(openModal(""))}>Create Folder</Create>
       <Favourites>
         <CustomFavourite />
         Favourites

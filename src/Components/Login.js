@@ -6,29 +6,14 @@ import { Button } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 
 import { setEmail, setPassword, login } from "../redux/actions";
-import image from "../assets/login.png";
 import { authSelector } from "../redux/selectors";
+import LeftImage from "./LeftImage";
 
 const Main = styled(Box)`
   display: grid;
   grid-template-columns: 30% 70%;
   height: 100vh;
   width: 100vw;
-`;
-const LeftBox = styled(Box)`
-  background-color: #5352ed;
-  display: flex;
-  flex-direction: column;
-  color: #ffffff;
-`;
-const Heading1 = styled(Box)`
-  margin: 60px auto 0px 50px;
-  font-size: 40px;
-`;
-const Heading2 = styled(Box)`
-  margin: 0px auto 0px 50px;
-  font-size: 40px;
-  font-weight: bold;
 `;
 
 const RightBox = styled(Box)`
@@ -74,14 +59,6 @@ const ErrorBox = styled(Box)`
   font-size: 13px;
 `;
 
-const Img = styled.img`
-  width: 600px;
-  height: 600px;
-  margin-left: 50px;
-  position: absolute;
-  top: 70px;
-`;
-
 const Email = styled(Input)`
   width: 350px;
   height: 50px;
@@ -119,11 +96,7 @@ function Login() {
         <Navigate to="/dashboard" replace={true} />
       ) : (
         <Main>
-          <LeftBox>
-            <Heading1>Welcome,</Heading1>
-            <Heading2>Get Started</Heading2>
-            <Img src={image} alt="description" />
-          </LeftBox>
+          <LeftImage />
           <RightBox>
             <Email
               placeholder="Email"

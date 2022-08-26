@@ -4,18 +4,35 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import FolderIcon from "@mui/icons-material/Folder";
 import { useDispatch, useSelector } from "react-redux";
 import CloseIcon from "@mui/icons-material/Close";
-import FolderOpenIcon from "@mui/icons-material/FolderOpen";
+import { useNavigate } from "react-router-dom";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import AddIcon from "@mui/icons-material/Add";
 
-import { getChildren } from "../redux/actions";
+import {
+  getBookmarks,
+  getChildren,
+  setParent,
+  setBookmarkFolder,
+  openModal,
+} from "../redux/actions";
 import { folderSelector } from "../redux/selectors";
 
-const CustomButton = styled(Button)`
-  width: 200px;
-  height: 40px;
+const FolderButton = styled(Button)`
+  font-size: 15px;
+  padding-left: 2px;
+  min-width: 30px;
+`;
+
+const ArrowButton = styled(Button)`
+  min-width: 5px;
+  padding: 2px;
+`;
+
+const CustomBox = styled(Box)`
+  min-width: 200px;
   border-radius: 12px;
   color: #88868f;
-  margin-top: 10px;
-  padding-right: 60px;
+  dispaly: flex;
 `;
 
 const CustomFolderIcon = styled(FolderIcon)`
@@ -27,16 +44,10 @@ const Loading = styled(Box)`
   color: #88868f;
 `;
 
-const NestedFolder = styled(Button)`
+const NestedFolder = styled(Box)`
   color: #88868f;
-  margin-left: 2px;
+  margin-left: 30px;
   display: flex;
-  margin-top: 3px;
-`;
-
-const CustomFolderOpen = styled(FolderOpenIcon)`
-  color: #5352ed;
-  margin-right: 6px;
 `;
 
 const Cross = styled(CloseIcon)`
@@ -44,38 +55,67 @@ const Cross = styled(CloseIcon)`
   margin-right: 4px;
 `;
 
+const CustomButton = styled(Button)`
+  min-width: 5px;
+`;
+
+const style = {
+  borderRadius: "15px",
+  backgroundColor: "#E4E3FF",
+};
+
+const NestedBox = styled(Box)`
+  margin-left: 15px;
+`;
+
 function Folder(props) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { item } = props;
   const initial = useSelector(folderSelector);
-  const { parentId, childLoading } = initial;
+  const { childLoading, folders, isOpen, selectedFolder } = initial;
+
+  const folderClick = () => {
+    !item.hasOwnProperty("cIds")
+      ? dispatch(getChildren(item.id))
+      : dispatch(setParent(item.id));
+  };
+
+  const bookmarkClick = () => {
+    navigate(`/dashboard/${item.id}`);
+    !item.hasOwnProperty("bIds")
+      ? dispatch(getBookmarks(item.id))
+      : dispatch(setBookmarkFolder(item.id));
+  };
 
   return (
     <>
-      <Box>
-        <CustomButton onClick={() => dispatch(getChildren(item.id))}>
-          <ArrowRightIcon />
+      <CustomBox style={selectedFolder === item.id ? style : {}}>
+        <ArrowButton onClick={() => folderClick()}>
+          {isOpen[item.id] ? <ArrowDropDownIcon /> : <ArrowRightIcon />}
+        </ArrowButton>
+        <FolderButton onClick={() => bookmarkClick()}>
           <CustomFolderIcon />
           {item.name}
+        </FolderButton>
+        <CustomButton onClick={() => dispatch(openModal(item.id))}>
+          <AddIcon />
         </CustomButton>
-      </Box>
-      {item.id === parentId && childLoading === "inProgress" ? (
-        <Loading>Loading...</Loading>
-      ) : (
-        item.hasOwnProperty("children") &&
-        (item.children.length !== 0 ? (
-          item.children.map((it) => (
+      </CustomBox>
+
+      {isOpen[item.id] && (
+        <NestedBox>
+          {childLoading === item.id ? (
+            <Loading>Loading...</Loading>
+          ) : item.hasOwnProperty("cIds") && item.cIds.length > 0 ? (
+            item.cIds.map((item) => <Folder key={item} item={folders[item]} />)
+          ) : (
             <NestedFolder>
-              <CustomFolderOpen />
-              <Box>{it.name}</Box>
+              <Cross />
+              No children
             </NestedFolder>
-          ))
-        ) : (
-          <NestedFolder>
-            <Cross />
-            <Box>No children</Box>
-          </NestedFolder>
-        ))
+          )}
+        </NestedBox>
       )}
     </>
   );

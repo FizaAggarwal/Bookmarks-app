@@ -1,7 +1,6 @@
 import {
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
-  LOGOUT_SUCCESS,
   LOGIN_REQUEST,
   SIGN_UP_REQUEST,
   SIGNUP_SUCCESS,
@@ -68,17 +67,11 @@ const authReducers = (state = initialState, action) => {
     case SIGNUP_FAILURE:
       return { ...state };
 
-    case GET_ME_REQUEST: {
+    case GET_ME_REQUEST:
       return { ...state, userLoading: "inProgress" };
-    }
 
     case GET_ME_SUCCESS:
       return { ...state, user: action.result, userLoading: "success" };
-
-    case LOGOUT_SUCCESS:
-      return {
-        ...initialState,
-      };
 
     default:
       return state;
